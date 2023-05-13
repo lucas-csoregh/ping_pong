@@ -63,7 +63,7 @@ void startGame(int who){
     initGame=true;
     printf("beep noise\n"); // TODO: add oplopend geluid dat stopt wanneer het spel echt begint
 
-    lightsCountDown();
+    //lightsCountDown(); // TODO: uncomment later
 
     gameRunning = true;
   }
@@ -74,8 +74,11 @@ int leftBorder = sizeof(field) -4;
 void moveBall() {
   if(whoHitLast == 1) { // move ball to the RIGHT (towards player2, away from player1)
 
-    field[rightBorder] = ball;
-    ballIndex = rightBorder;
+    if(ballIndex == 0) { // start w moving away from the left border if ballIndex hasn't been set yet
+      field[rightBorder] = ball;
+      ballIndex = rightBorder;
+      printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
+    }
 
     while(whoHitLast == 1 && ballIndex != leftBorder) {
       int lastIndex = ballIndex;
@@ -85,7 +88,6 @@ void moveBall() {
       printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
     }
   } else if(whoHitLast == 2) { // move ball to the LEFT (towards player1, away from player2)
-    field[leftBorder] = ball;
   }
 }
 
