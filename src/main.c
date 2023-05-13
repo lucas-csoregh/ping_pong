@@ -74,18 +74,24 @@ int leftBorder = sizeof(field) -4;
 
 ISR(PCINT1_vect) {
   if ((PINC & (1 << PC1)) == 0) {
-    whoHitLast = 1;
-    //printf("\nwhoHitLast: %d\n", whoHitLast);
+
     if(!gameRunning) {
-      startGame(1); // button 1 pressed, start game as player 1
+      whoHitLast = 1;
+      startGame(1); // btn 1 pressed, start game as player 1
+    } else {
+      if(ballIndex < rightBorder + 5) {
+        whoHitLast = 1;
+      }
     }
   } else if ((PINC & (1 << PC2)) == 0) {
-    gameOver = true;
+    gameOver = true; // btn 2 pressed, game over
   } else if ((PINC & (1 << PC3)) == 0) {
-    whoHitLast = 2;
-    //printf("\nwhoHitLast: %d\n", whoHitLast);
     if(!gameRunning) {
-      startGame(2); // button 3 pressed, start game as player 2
+      whoHitLast = 2;
+      startGame(2); // btn 3 pressed, start game as player 2
+    } else {
+      if(ballIndex > leftBorder - 5)
+      whoHitLast = 2;
     }
   }
 }
@@ -110,10 +116,10 @@ void gameLoop() {
   }
 
   // MOVE LEFT
-  if(whoHitLast == 2 && ballIndex == 0) { // start w moving away from the left border if ballIndex hasn't been set yet
+  if(whoHitLast == 2 && ballIndex == 0) { // start w moving away from RIGHT left border if ballIndex hasn't been set yet
     field[leftBorder] = ball;
     ballIndex = leftBorder;
-    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
+    printf(field);
   }
 
   while(!gameOver && whoHitLast == 2 && ballIndex != rightBorder) {
@@ -121,15 +127,15 @@ void gameLoop() {
     ballIndex--;
     field[ballIndex] = ball;
     field[lastIndex] = line;
-    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
+    printf(field);
   }
 
 
   // MOVE RIGHT
-  if(whoHitLast==1 && ballIndex == 0) { // start w moving away from the left border if ballIndex hasn't been set yet
+  if(whoHitLast==1 && ballIndex == 0) { // start w moving away from the LEFT border if ballIndex hasn't been set yet
     field[rightBorder] = ball;
     ballIndex = rightBorder;
-    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
+    printf(field);
   }
 
   while(!gameOver && whoHitLast == 1 && ballIndex != leftBorder) {
@@ -137,7 +143,7 @@ void gameLoop() {
     ballIndex++;
     field[ballIndex] = ball;
     field[lastIndex] = line;
-    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
+    printf(field);
   }
 }
 
