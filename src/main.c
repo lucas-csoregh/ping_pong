@@ -102,36 +102,7 @@ void initGameReq() {
   sei();
 }
 
-void gameLoop() {
-  int old = velocity;
-  velocity = analogToDigital();
-  writeNumberAndWait(velocity, 20);
-  if(!initGame) {
-    if(old != velocity) {
-      printf("velocity: %d\n", velocity);
-    }
-  }
-
-  // MOVE LEFT
-  if(whoHitLast == 2 && ballIndex == 0) { // start w moving away from RIGHT left border if ballIndex hasn't been set yet
-    field[leftBorder] = ball;
-    ballIndex = leftBorder;
-    printf(field);
-  }
-
-  while(!gameOver && whoHitLast == 2 && ballIndex != rightBorder) {
-    int lastIndex = ballIndex;
-    ballIndex--;
-    field[ballIndex] = ball;
-    field[lastIndex] = line;
-    printf(field);
-    if(ballIndex == rightBorder) {
-      printf("Player 2 WON!!\n");
-      gameOver = true;
-    }
-  }
-
-
+void sendBallToTheRight() {
   // MOVE RIGHT
   if(whoHitLast==1 && ballIndex == 0) { // start w moving away from the LEFT border if ballIndex hasn't been set yet
     field[rightBorder] = ball;
@@ -150,6 +121,41 @@ void gameLoop() {
       gameOver = true;
     }
   }
+}
+
+void sendBallToTheLeft() {
+  // MOVE LEFT
+  if(whoHitLast == 2 && ballIndex == 0) { // start w moving away from RIGHT left border if ballIndex hasn't been set yet
+    field[leftBorder] = ball;
+    ballIndex = leftBorder;
+    printf(field);
+  }
+
+  while(!gameOver && whoHitLast == 2 && ballIndex != rightBorder) {
+    int lastIndex = ballIndex;
+    ballIndex--;
+    field[ballIndex] = ball;
+    field[lastIndex] = line;
+    printf(field);
+    if(ballIndex == rightBorder) {
+      printf("Player 2 WON!!\n");
+      gameOver = true;
+    }
+  }
+}
+
+void gameLoop() {
+  int old = velocity;
+  velocity = analogToDigital();
+  writeNumberAndWait(velocity, 20);
+  if(!initGame) {
+    if(old != velocity) {
+      printf("velocity: %d\n", velocity);
+    }
+  }
+
+  sendBallToTheLeft();
+  sendBallToTheRight();
 }
 
 int main(void) {
