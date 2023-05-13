@@ -71,59 +71,21 @@ void startGame(int who){
 
 int rightBorder = 1;
 int leftBorder = sizeof(field) -4;
-void moveLeft() {
-  if(ballIndex == 0) { // start w moving away from the left border if ballIndex hasn't been set yet
-    field[leftBorder] = ball;
-    ballIndex = leftBorder;
-    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
-  }
-
-  while(whoHitLast == 2 && ballIndex != rightBorder) {
-    int lastIndex = ballIndex;
-    ballIndex--;
-    field[ballIndex] = ball;
-    field[lastIndex] = line;
-    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
-  }
-}
-void moveRight() {
-  if(ballIndex == 0) { // start w moving away from the left border if ballIndex hasn't been set yet
-    field[rightBorder] = ball;
-    ballIndex = rightBorder;
-    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
-  }
-
-  while(whoHitLast == 1 && ballIndex != leftBorder) {
-    int lastIndex = ballIndex;
-    ballIndex++;
-    field[ballIndex] = ball;
-    field[lastIndex] = line;
-    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
-  }
-}
 
 ISR(PCINT1_vect) {
   if ((PINC & (1 << PC1)) == 0) {
     whoHitLast = 1;
-    printf("\nwhoHitLast: %d\n", whoHitLast);
+    //printf("\nwhoHitLast: %d\n", whoHitLast);
     if(!gameRunning) {
       startGame(1); // button 1 pressed, start game as player 1
-    } else {
-      //whoHitLast = 1;
-      //moveBall();
-      moveRight();
     }
   } else if ((PINC & (1 << PC2)) == 0) {
     gameOver = true;
   } else if ((PINC & (1 << PC3)) == 0) {
     whoHitLast = 2;
-    printf("\nwhoHitLast: %d\n", whoHitLast);
+    //printf("\nwhoHitLast: %d\n", whoHitLast);
     if(!gameRunning) {
       startGame(2); // button 3 pressed, start game as player 2
-    } else {
-      //whoHitLast = 2;
-      //moveBall();
-      moveLeft();
     }
   }
 }
@@ -145,6 +107,37 @@ void gameLoop() {
     if(old != velocity) {
       printf("velocity: %d\n", velocity);
     }
+  }
+
+  // MOVE LEFT
+  if(whoHitLast == 2 && ballIndex == 0) { // start w moving away from the left border if ballIndex hasn't been set yet
+    field[leftBorder] = ball;
+    ballIndex = leftBorder;
+    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
+  }
+
+  while(!gameOver && whoHitLast == 2 && ballIndex != rightBorder) {
+    int lastIndex = ballIndex;
+    ballIndex--;
+    field[ballIndex] = ball;
+    field[lastIndex] = line;
+    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
+  }
+
+
+  // MOVE RIGHT
+  if(whoHitLast==1 && ballIndex == 0) { // start w moving away from the left border if ballIndex hasn't been set yet
+    field[rightBorder] = ball;
+    ballIndex = rightBorder;
+    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
+  }
+
+  while(!gameOver && whoHitLast == 1 && ballIndex != leftBorder) {
+    int lastIndex = ballIndex;
+    ballIndex++;
+    field[ballIndex] = ball;
+    field[lastIndex] = line;
+    printf(field); // the playing field = 50* "-" ( + 1* "[" and 1* "]" and 1* "\n")
   }
 }
 
