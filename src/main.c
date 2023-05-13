@@ -11,7 +11,14 @@ int velocity = 100;
 bool gameStart = false;
 bool initGame = false;
 
-
+void lightsCountDown() {
+  for(int i=0; i<3; i++) {
+    lightUpAllLeds();
+    _delay_ms(1000);
+    lightDownAllLeds();
+    _delay_ms(1000);
+  }
+}
 void startGame(int who){
   if(!initGame) {
     if(who == 1) {
@@ -22,6 +29,8 @@ void startGame(int who){
 
     initGame=true;
     printf("beep noise\n"); // TODO: add oplopend geluid dat stopt wanneer het spel echt begint
+
+    lightsCountDown();
   }
 }
 
@@ -35,21 +44,23 @@ ISR(PCINT1_vect) {
   }
 }
 
-void lightsCountDown() {
 
-}
 
 int main(void) {
   initUSART();
   initDisplay();
   initADC();
   initButtonISR();
+  enableAllLeds();
   sei();
   while (1) {
+    int old = velocity;
     velocity = analogToDigital();
     writeNumberAndWait(velocity, 20);
     if(!initGame) {
-      printf("velocity: %d\n", velocity);
+      if(old != velocity) {
+        printf("velocity: %d\n", velocity);
+      }
     }
   }
 }
