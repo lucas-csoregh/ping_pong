@@ -78,10 +78,8 @@ ISR(PCINT1_vect) {
     if(!gameRunning) {
       whoHitLast = 1;
       startGame(1); // btn 1 pressed, start game as player 1
-    } else {
-      if(ballIndex < rightBorder + 5) {
-        whoHitLast = 1;
-      }
+    } else if(ballIndex < rightBorder + 5) {
+      whoHitLast = 1;
     }
   } else if ((PINC & (1 << PC2)) == 0) {
     gameOver = true; // btn 2 pressed, game over
@@ -89,8 +87,7 @@ ISR(PCINT1_vect) {
     if(!gameRunning) {
       whoHitLast = 2;
       startGame(2); // btn 3 pressed, start game as player 2
-    } else {
-      if(ballIndex > leftBorder - 5)
+    } else if(ballIndex > leftBorder - 5){
       whoHitLast = 2;
     }
   }
@@ -128,6 +125,10 @@ void gameLoop() {
     field[ballIndex] = ball;
     field[lastIndex] = line;
     printf(field);
+    if(ballIndex == rightBorder) {
+      printf("Player 2 WON!!\n");
+      gameOver = true;
+    }
   }
 
 
@@ -144,6 +145,10 @@ void gameLoop() {
     field[ballIndex] = ball;
     field[lastIndex] = line;
     printf(field);
+    if(ballIndex == leftBorder) {
+      printf("Player 1 WON!!\n");
+      gameOver = true;
+    }
   }
 }
 
