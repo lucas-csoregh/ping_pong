@@ -15,6 +15,7 @@ void startGame(){
   if(!gameStart) {
     gameStart=true;
   }
+  printf("beep noise\n");
 }
 
 ISR(PCINT1_vect) {
@@ -37,15 +38,9 @@ int main(void) {
   sei();
   while (1) {
     velocity = analogToDigital();
-    
     writeNumberAndWait(velocity, 20);
     if(!gameStart) {
       printf("velocity: %d\n", velocity);
-    }
-
-    if(gameStart) {
-      // make a beep noise
-      printf("beep noise\n");
     }
   }
 }
