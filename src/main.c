@@ -8,19 +8,24 @@
 
 bool gameOver = true;
 int velocity = 100;
-bool buttonPressed = false;
+bool gameStart = false;
+
+
+void startGame(){
+  if(!gameStart) {
+    gameStart=true;
+  }
+}
 
 ISR(PCINT1_vect) {
   if ((PINC & (1 << PC1)) == 0) {
     printf("Player 1 (left)\n");
+    startGame();
   } else if ((PINC & (1 << PC2)) == 0) {
     //printf("2\n");
   } else if ((PINC & (1 << PC3)) == 0) {
     printf("Player 2 (right)\n");
-  }
-
-  if ((PINC & (1 << PC2)) == 0) {
-    buttonPressed = true;
+    startGame();
   }
 }
 
@@ -31,13 +36,16 @@ int main(void) {
   initButtonISR();
   sei();
   while (1) {
-    int value = analogToDigital();
-
-    if(buttonPressed) {
-      break;
-    }
+    velocity = analogToDigital();
     
-    writeNumber(value);
-    // set velocity = value
+    writeNumberAndWait(velocity, 20);
+    if(!gameStart) {
+      printf("velocity: %d\n", velocity);
+    }
+
+    if(gameStart) {
+      // make a beep noise
+      printf("beep noise\n");
+    }
   }
 }
