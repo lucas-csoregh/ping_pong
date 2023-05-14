@@ -139,7 +139,7 @@ void sendBall() {
     if(whoHitLast==1) { // start w moving away from the LEFT border if ballIndex hasn't been set yet
       field[rightBorder] = ball;
       ballIndex = rightBorder;
-    } else if(whoHitLast==1) { // start w moving away from the LEFT border if ballIndex hasn't been set yet
+    } else if(whoHitLast==2) { // start w moving away from the LEFT border if ballIndex hasn't been set yet
       field[leftBorder] = ball;
       ballIndex = leftBorder;
     }
@@ -169,6 +169,7 @@ void sendBall() {
       }
       printf("Score: %d\n", score[0]);
       gameOver = true;
+      break;
     }
   }
 }
