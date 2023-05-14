@@ -173,30 +173,6 @@ void sendBall() {
   }
 }
 
-void sendBallToTheLeft() {
-  // MOVE LEFT
-  if(whoHitLast == 2 && ballIndex == 0) { // start w moving away from RIGHT left border if ballIndex hasn't been set yet
-    field[leftBorder] = ball;
-    ballIndex = leftBorder;
-    printf(field);
-  }
-
-  while(!gameOver && whoHitLast == 2 && ballIndex != rightBorder) {
-    int lastIndex = ballIndex;
-    ballIndex--;
-    field[ballIndex] = ball;
-    field[lastIndex] = line;
-
-    //printf(field);
-    printf("%d @ %s", velocity, field);
-
-    if(ballIndex == rightBorder) {
-      printf("Player 2 WON!!\n");
-      printf("Score: %d\n", score[1]);
-      gameOver = true;
-    }
-  }
-}
 
 void gameLoop() {
   int old = velocity;
@@ -208,8 +184,6 @@ void gameLoop() {
     }
   }
 
-  //sendBallToTheLeft();
-  //sendBallToTheRight();
   sendBall();
 }
 
