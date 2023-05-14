@@ -1,13 +1,15 @@
 #include <avr/io.h>
 #include <display.h>
 #include <usart.h>
-#include <util/delay.h>
 #include <wpsh209.h>
 #include <avr/interrupt.h>
 #include <stdbool.h>
 
 #include <stdio.h>
 #include <string.h>
+
+#include <util/delay.h>
+#include <util/atomic.h>
 
 int velocity = 0; // always shown on the segmented led display
 
@@ -23,6 +25,24 @@ int ballIndex = 0; // where in the char field[] is the ball rn
 int whoHitLast =0;
 
 int score[2];
+
+volatile unsigned long millisCount = 0;
+
+ISR(TIMER1_COMPA_vect) {
+  millisCount++;
+}
+
+unsigned long millis() {
+  unsigned long count;
+  
+  // Disable interrupts temporarily
+  ATOMIC_BLOCK(ATOMIC_FORCEON) {
+    count = millisCount;
+  }
+  
+  return count;
+}
+
 
 void lightsCountDown() {
   // Blink 4 lights 
@@ -97,12 +117,20 @@ ISR(PCINT1_vect) {
   }
 }
 
+void initTimer1() {
+  TCCR1B |= (1 << WGM12);            // CTC mode
+  OCR1A = F_CPU / 8000 - 1;
+  TIMSK1 |= (1 << OCIE1A);           // Enable Timer1 compare match interrupt
+  TCCR1B |= (1 << CS11);
+}
+
 void initGameReq() {
   initUSART();
   initDisplay();
   initADC();
   initButtonISR();
   enableAllLeds();
+  initTimer1();
   sei();
 }
 
@@ -119,7 +147,10 @@ void sendBallToTheRight() {
     ballIndex++;
     field[ballIndex] = ball;
     field[lastIndex] = line;
-    printf(field);
+
+    //printf("%ld | %d @ %s",millis() , velocity, field);
+    if(millis() % velocity)
+
     if(ballIndex == leftBorder) {
       printf("Player 1 WON!!\n");
       printf("Score: %d\n", score[0]);
@@ -141,7 +172,10 @@ void sendBallToTheLeft() {
     ballIndex--;
     field[ballIndex] = ball;
     field[lastIndex] = line;
-    printf(field);
+
+    //printf(field);
+    printf("%d @ %s", velocity, field);
+
     if(ballIndex == rightBorder) {
       printf("Player 2 WON!!\n");
       printf("Score: %d\n", score[1]);
