@@ -158,8 +158,11 @@ void sendBall() {
     field[ballIndex] = ball;
     field[lastIndex] = line;
 
-    //printf("%ld | %d @ %s",millis() , velocity, field);
-    printf(field);
+    while(!(millis() % velocity == 0)) {
+      // wait
+    }
+    printf("%ld | %d @ %s",millis() , velocity, field);
+    //printf(field);
 
     if(ballIndex == leftBorder || ballIndex == rightBorder) {
       if(ballIndex == leftBorder) {
