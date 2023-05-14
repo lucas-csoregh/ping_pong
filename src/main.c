@@ -22,6 +22,8 @@ int ballIndex = 0; // where in the char field[] is the ball rn
 
 int whoHitLast =0;
 
+int score[2];
+
 void lightsCountDown() {
   // Blink 4 lights 
   for(int i=0; i<3; i++) {
@@ -80,6 +82,7 @@ ISR(PCINT1_vect) {
       startGame(1); // btn 1 pressed, start game as player 1
     } else if(ballIndex < rightBorder + 5) {
       whoHitLast = 1;
+      score[0]++;
     }
   } else if ((PINC & (1 << PC2)) == 0) {
     gameOver = true; // btn 2 pressed, game over
@@ -89,6 +92,7 @@ ISR(PCINT1_vect) {
       startGame(2); // btn 3 pressed, start game as player 2
     } else if(ballIndex > leftBorder - 5){
       whoHitLast = 2;
+      score[1]++;
     }
   }
 }
@@ -118,6 +122,7 @@ void sendBallToTheRight() {
     printf(field);
     if(ballIndex == leftBorder) {
       printf("Player 1 WON!!\n");
+      printf("Score: %d\n", score[0]);
       gameOver = true;
     }
   }
@@ -139,6 +144,7 @@ void sendBallToTheLeft() {
     printf(field);
     if(ballIndex == rightBorder) {
       printf("Player 2 WON!!\n");
+      printf("Score: %d\n", score[1]);
       gameOver = true;
     }
   }
