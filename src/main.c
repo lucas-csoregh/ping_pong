@@ -160,9 +160,10 @@ void sendBall() {
 
     while(!(millis() % velocity == 0)) {
       // wait
+      velocity = analogToDigital();
+      writeNumberAndWait(velocity, 20);
     }
     printf("%ld | %d @ %s",millis() , velocity, field);
-    //printf(field);
 
     if(ballIndex == leftBorder || ballIndex == rightBorder) {
       if(ballIndex == leftBorder) {
