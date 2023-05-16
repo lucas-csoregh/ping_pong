@@ -11,6 +11,8 @@
 #include <util/delay.h>
 #include <util/atomic.h>
 
+#define PLAYER 15
+
 int velocity = 0; // always shown on the segmented led display
 
 bool initGame = false; // intros roll
@@ -33,6 +35,21 @@ int leftBorder = sizeof(field) -4;
 
 ISR(TIMER1_COMPA_vect) {
   millisCount++;
+}
+
+void winnerScreen(int whoWon) {
+  int index = whoWon -1;
+
+  printf("Score: %d\n", score[index]);
+  printf("Player %d WON!!\n", whoWon);
+
+  while(!gameOver) {
+    writeLetterToSegment(0, PLAYER);
+    writeNumberToSegment(1, whoWon);
+    
+    writeNumberToSegment(2, (score[index]/ 10) % 10);
+    writeNumberToSegment(3, score[index] % 10);
+  }
 }
 
 unsigned long millis() {
@@ -176,12 +193,12 @@ void sendBall() {
     if(ballIndex == leftBorder || ballIndex == rightBorder) {
       // TODO: add overwinningsgeluid here
       if(ballIndex == leftBorder) {
-        printf("Player 1 WON!!\n");
-        printf("Score: %d\n", score[0]);
+        winnerScreen(1);
       } else if(ballIndex == rightBorder) {
-        printf("Player 2 WON!!\n");
-        printf("Score: %d\n", score[1]);
+        winnerScreen(2);
       }
+
+
       gameOver = true;
       break;
     }
