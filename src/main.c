@@ -10,7 +10,9 @@
 
 #include <util/delay.h>
 #include <util/atomic.h>
+
 #include <buzzer.h>
+#include <led.h>
 
 #define PLAYER 15
 
@@ -35,17 +37,27 @@ volatile unsigned long millisCount = 0;
 int rightBorder = 1;
 int leftBorder = sizeof(field) -4;
 
+void readVelocity() {
+  int analog = analogToDigital();
+  if(analog > 1) {
+    velocity = analog;
+  }
+  //return velocity;
+}
+
 ISR(TIMER1_COMPA_vect) {
   millisCount++;
 }
 
 void winnerScreen(int whoWon) {
-  youWin();
 
   int index = whoWon -1;
 
+  printf("\n\nPlayer %d WON!!\n", whoWon);
+  printf("---------------\n", whoWon);
   printf("Score: %d\n", score[index]);
-  printf("Player %d WON!!\n", whoWon);
+
+  youWin();
 
   while(!gameOver) {
     writeLetterToSegment(0, PLAYER);
@@ -69,36 +81,6 @@ unsigned long millis() {
 }
 
 
-void lightsCountDown() {
-  // Blink 4 lights 
-  for(int i=0; i<3; i++) {
-    lightUpAllLeds();
-    _delay_ms(250);
-    lightDownAllLeds();
-    _delay_ms(250);
-  }
-  // Blink 3 lights (+speed)
-  for(int i=0; i<3; i++) {
-    lightUpLeds(0b011100);
-    _delay_ms(250);
-    lightDownLeds(0b011100);
-    _delay_ms(250);
-  }
-  // Blink 2 lights (+speed)
-  for(int i=0; i<3; i++) {
-    lightUpLeds(0b001100);
-    _delay_ms(250);
-    lightDownLeds(0b001100);
-    _delay_ms(250);
-  }
-  // Blink 1 lights (+speed)
-  for(int i=0; i<3; i++) {
-    lightUpLeds(0b000100);
-    _delay_ms(250);
-    lightDownLeds(0b000100);
-    _delay_ms(250);
-  }
-}
 void startGame(int who){
   if(!initGame) {
     if(who == 1) {
@@ -109,9 +91,6 @@ void startGame(int who){
     whoHitLast = who;
 
     initGame=true;
-    printf("beep noise\n"); // TODO: add oplopend geluid dat stopt wanneer het spel echt begint
-
-    //lightsCountDown(); // TODO: uncomment later
 
     gameRunning = true;
   }
@@ -158,10 +137,15 @@ void initTimer1() {
 }
 
 void introMuziekske() {
+  //lightsCountDown(); // TODO: sync later
   enableBuzzer();
   while(!initGame) {
     for (int note = 0; note < 8; note++) {
-      changeVelocity(analogToDigital());
+      if(initGame) {
+        break;
+      }
+      //changeVelocity(analogToDigital());
+      readVelocity();
       writeNumberAndWait(velocity, 20);
       playTone(frequencies[note], DURATION);
       _delay_ms(DURATION);
@@ -180,11 +164,12 @@ void initGameReq() {
   introMuziekske();
 }
 
+/*
 void changeVelocity(int vel) {
   if(vel > 1) {
     velocity = vel;
   }
-}
+}*/
 
 void sendBall() {
   if(ballIndex == 0 && (whoHitLast ==1 || whoHitLast==2)) {
@@ -213,7 +198,8 @@ void sendBall() {
 
     while(gamePaused || !(millis() % velocity == 0)) {
       // wait
-      changeVelocity(analogToDigital());
+      //changeVelocity(analogToDigital());
+      readVelocity();
       //velocity = analogToDigital();
       writeNumberAndWait(velocity, 20);
     }
@@ -239,7 +225,8 @@ void sendBall() {
 void gameLoop() {
   int old = velocity;
   //velocity = analogToDigital();
-  changeVelocity(analogToDigital());
+  //changeVelocity(analogToDigital());
+  readVelocity();
   writeNumberAndWait(velocity, 20);
   if(!initGame) {
     if(old != velocity) {
