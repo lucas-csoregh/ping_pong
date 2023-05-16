@@ -170,9 +170,11 @@ void sendBall() {
       //velocity = analogToDigital();
       writeNumberAndWait(velocity, 20);
     }
-    printf("%ld | %d @ %s",millis() , velocity, field);
+    //printf("%ld | %d @ %s",millis() , velocity, field);
+    printf("vel:%d %s", velocity, field);
 
     if(ballIndex == leftBorder || ballIndex == rightBorder) {
+      // TODO: add overwinningsgeluid here
       if(ballIndex == leftBorder) {
         printf("Player 1 WON!!\n");
         printf("Score: %d\n", score[0]);
