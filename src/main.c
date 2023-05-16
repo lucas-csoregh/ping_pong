@@ -101,6 +101,7 @@ void startGame(int who){
     } else if(who == 2) {
       printf("Player 2 (right)\n");
     }
+    whoHitLast = who;
 
     initGame=true;
     printf("beep noise\n"); // TODO: add oplopend geluid dat stopt wanneer het spel echt begint
@@ -166,7 +167,8 @@ void sendBall() {
       field[leftBorder] = ball;
       ballIndex = leftBorder;
     }
-    printf(field);
+    //printf(field);
+    printf("vel:%d %s", velocity, field);
   }
 
   while( !gameOver && (whoHitLast == 1 && ballIndex != leftBorder) || (whoHitLast == 2 && ballIndex != rightBorder)) {
