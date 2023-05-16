@@ -10,6 +10,7 @@
 
 #include <util/delay.h>
 #include <util/atomic.h>
+#include <buzzer.h>
 
 #define PLAYER 15
 
@@ -51,6 +52,8 @@ void winnerScreen(int whoWon) {
     writeNumberToSegment(2, (score[index]/ 10) % 10);
     writeNumberToSegment(3, score[index] % 10);
   }
+
+  youWin();
 }
 
 unsigned long millis() {
@@ -153,6 +156,7 @@ void initTimer1() {
   TCCR1B |= (1 << CS11);
 }
 
+uint32_t frequencies[] = {C5, D5, E5, F5, G5, A5, B5, C6};  // do-re-mi...
 void initGameReq() {
   initUSART();
   initDisplay();
@@ -161,6 +165,14 @@ void initGameReq() {
   enableAllLeds();
   initTimer1();
   sei();
+  enableBuzzer();
+  for (int note = 0; note < 8; note++) {
+    playTone(frequencies[note], DURATION);
+    printf("Period: %lu\n", frequencies[note]);
+    lightUpLed(0);
+    _delay_ms(DURATION);
+    lightDownLed(0);
+  }
 }
 
 void changeVelocity(int vel) {

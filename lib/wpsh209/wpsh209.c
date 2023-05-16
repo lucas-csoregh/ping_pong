@@ -28,29 +28,6 @@ void pressButton(int btnNr) {
   }
 }
 
-void enableBuzzer() {
-  DDRD |= (1 << PD3); // set PD3 as output
-}
-
-void buzzerOff() {
-  PORTD &= ~(1 << PD3); // turn off PD3
-}
-
-void buzzerOn() {
-  PORTD |= (1 << PD3); // turn on PD3
-}
-
-void playTone(float frequency, uint32_t duration) {
-  uint32_t period = 1000000 / frequency;
-  uint32_t cycles = frequency * duration / 1000;
-  for (uint32_t i = 0; i < cycles; i++) {
-    buzzerOn();
-    _delay_us(period / 2);
-    buzzerOff();
-    _delay_us(period / 2);
-  }
-}
-
 void enableLed(int lednumber) {
   switch (lednumber) {
     case 1:
