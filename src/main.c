@@ -40,6 +40,8 @@ ISR(TIMER1_COMPA_vect) {
 }
 
 void winnerScreen(int whoWon) {
+  youWin();
+
   int index = whoWon -1;
 
   printf("Score: %d\n", score[index]);
@@ -53,7 +55,6 @@ void winnerScreen(int whoWon) {
     writeNumberToSegment(3, score[index] % 10);
   }
 
-  youWin();
 }
 
 unsigned long millis() {
@@ -156,7 +157,18 @@ void initTimer1() {
   TCCR1B |= (1 << CS11);
 }
 
-uint32_t frequencies[] = {C5, D5, E5, F5, G5, A5, B5, C6};  // do-re-mi...
+void introMuziekske() {
+  enableBuzzer();
+  while(!initGame) {
+    for (int note = 0; note < 8; note++) {
+      changeVelocity(analogToDigital());
+      writeNumberAndWait(velocity, 20);
+      playTone(frequencies[note], DURATION);
+      _delay_ms(DURATION);
+    }
+  }
+}
+
 void initGameReq() {
   initUSART();
   initDisplay();
@@ -165,14 +177,7 @@ void initGameReq() {
   enableAllLeds();
   initTimer1();
   sei();
-  enableBuzzer();
-  for (int note = 0; note < 8; note++) {
-    playTone(frequencies[note], DURATION);
-    printf("Period: %lu\n", frequencies[note]);
-    lightUpLed(0);
-    _delay_ms(DURATION);
-    lightDownLed(0);
-  }
+  introMuziekske();
 }
 
 void changeVelocity(int vel) {
