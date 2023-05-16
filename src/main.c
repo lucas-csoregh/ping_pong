@@ -17,7 +17,8 @@ int velocity = 0; // always shown on the segmented led display
 
 bool initGame = false; // intros roll
 bool gameRunning = false; // the actual game part of the program really starts here
-bool gameOver = false ; // game over
+bool gameOver = false; // game over
+bool gamePaused = false;
 char field[] = "[--------------------------------------------------]\n";
 
 char line = '-';
@@ -123,7 +124,12 @@ ISR(PCINT1_vect) {
       score[0]++;
     }
   } else if ((PINC & (1 << PC2)) == 0) {
-    gameOver = true; // btn 2 pressed, game over
+    //gameOver = true; // btn 2 pressed, game over
+    if(gamePaused) {
+      gamePaused = false;
+    } else {
+      gamePaused = true;
+    }
   } else if ((PINC & (1 << PC3)) == 0) {
     if(!gameRunning) {
       //whoHitLast = 2;
@@ -183,7 +189,7 @@ void sendBall() {
     field[ballIndex] = ball;
     field[lastIndex] = line;
 
-    while(!(millis() % velocity == 0)) {
+    while(gamePaused || !(millis() % velocity == 0)) {
       // wait
       changeVelocity(analogToDigital());
       //velocity = analogToDigital();
