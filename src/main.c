@@ -28,6 +28,9 @@ int score[2];
 
 volatile unsigned long millisCount = 0;
 
+int rightBorder = 1;
+int leftBorder = sizeof(field) -4;
+
 ISR(TIMER1_COMPA_vect) {
   millisCount++;
 }
@@ -91,14 +94,11 @@ void startGame(int who){
   }
 }
 
-int rightBorder = 1;
-int leftBorder = sizeof(field) -4;
 
 ISR(PCINT1_vect) {
   if ((PINC & (1 << PC1)) == 0) {
-
     if(!gameRunning) {
-      whoHitLast = 1;
+      //whoHitLast = 1;
       startGame(1); // btn 1 pressed, start game as player 1
     } else if(ballIndex < rightBorder + 5) {
       whoHitLast = 1;
@@ -108,7 +108,7 @@ ISR(PCINT1_vect) {
     gameOver = true; // btn 2 pressed, game over
   } else if ((PINC & (1 << PC3)) == 0) {
     if(!gameRunning) {
-      whoHitLast = 2;
+      //whoHitLast = 2;
       startGame(2); // btn 3 pressed, start game as player 2
     } else if(ballIndex > leftBorder - 5){
       whoHitLast = 2;
@@ -168,10 +168,11 @@ void sendBall() {
     if(ballIndex == leftBorder || ballIndex == rightBorder) {
       if(ballIndex == leftBorder) {
         printf("Player 1 WON!!\n");
+        printf("Score: %d\n", score[0]);
       } else if(ballIndex == rightBorder) {
         printf("Player 2 WON!!\n");
+        printf("Score: %d\n", score[1]);
       }
-      printf("Score: %d\n", score[0]);
       gameOver = true;
       break;
     }
