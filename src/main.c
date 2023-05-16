@@ -134,6 +134,12 @@ void initGameReq() {
   sei();
 }
 
+void changeVelocity(int vel) {
+  if(vel > 1) {
+    velocity = vel;
+  }
+}
+
 void sendBall() {
   if(ballIndex == 0 && (whoHitLast ==1 || whoHitLast==2)) {
     if(whoHitLast==1) { // start w moving away from the LEFT border if ballIndex hasn't been set yet
@@ -160,7 +166,8 @@ void sendBall() {
 
     while(!(millis() % velocity == 0)) {
       // wait
-      velocity = analogToDigital();
+      changeVelocity(analogToDigital());
+      //velocity = analogToDigital();
       writeNumberAndWait(velocity, 20);
     }
     printf("%ld | %d @ %s",millis() , velocity, field);
@@ -182,7 +189,8 @@ void sendBall() {
 
 void gameLoop() {
   int old = velocity;
-  velocity = analogToDigital();
+  //velocity = analogToDigital();
+  changeVelocity(analogToDigital());
   writeNumberAndWait(velocity, 20);
   if(!initGame) {
     if(old != velocity) {
