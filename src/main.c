@@ -115,6 +115,9 @@ void startGame(int who){
 
 
 ISR(PCINT1_vect) {
+  // FIXED: when these three if statements were in an if-elseif-else chain, player1 could sabotage player 3 by holding in their button
+  // but when the conditional chain is split like this, they cannot sabotage eachother by holding their button 
+
   if ((PINC & (1 << PC1)) == 0) {
     if(!gameRunning) {
       //whoHitLast = 1;
@@ -123,14 +126,16 @@ ISR(PCINT1_vect) {
       whoHitLast = 1;
       score[0]++;
     }
-  } else if ((PINC & (1 << PC2)) == 0) {
+  } 
+  if ((PINC & (1 << PC2)) == 0) {
     //gameOver = true; // btn 2 pressed, game over
     if(gamePaused) {
       gamePaused = false;
     } else {
       gamePaused = true;
     }
-  } else if ((PINC & (1 << PC3)) == 0) {
+  } 
+  if ((PINC & (1 << PC3)) == 0) {
     if(!gameRunning) {
       //whoHitLast = 2;
       startGame(2); // btn 3 pressed, start game as player 2
