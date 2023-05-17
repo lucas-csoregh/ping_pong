@@ -40,17 +40,30 @@ void playTone(float frequency, uint32_t duration) {
   }
 }
 
-void youWin() {
-  playTone(C5, 200);
-  _delay_ms(200);
-  playTone(C5, 50);
-  _delay_ms(50);
-  playTone(C5, 50);
-  _delay_ms(50);
-  playTone(C5, 100);
-  _delay_ms(50);
-  playTone(E5, 300);
-  _delay_ms(300);
+void youWin(int whoWon) {
+  if(whoWon == 1) {
+    playTone(C5, 200);
+    _delay_ms(200);
+    playTone(C5, 50);
+    _delay_ms(50);
+    playTone(C5, 50);
+    _delay_ms(50);
+    playTone(C5, 100);
+    _delay_ms(50);
+    playTone(E5, 300);
+    _delay_ms(300);
+  } else if(whoWon == 2) {
+    playTone(E5, 200);
+    _delay_ms(200);
+    playTone(E5, 50);
+    _delay_ms(50);
+    playTone(E5, 50);
+    _delay_ms(50);
+    playTone(E5, 100);
+    _delay_ms(50);
+    playTone(C5, 300);
+    _delay_ms(300);
+  }
 }
 
 void player1Hit() {
