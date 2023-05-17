@@ -169,6 +169,7 @@ void initTimer1() {
 }
 
 void introMuziekske() {
+  printf("Press button 1 or 3 to start the game,\npress button 2 during game to pause the game.\n\n");
   enableBuzzer();
   while(!initGame) {
     for (int note = 0; note < 8; note++) {
