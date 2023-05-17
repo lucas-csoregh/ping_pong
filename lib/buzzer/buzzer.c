@@ -19,9 +19,6 @@
 #define  B5      987.770
 #define  C6      1046.500
 
-//uint32_t frequencies[] = {C5, D5, E5, F5, G5, A5, B5, C6};  // do-re-mi...
-
-
 void enableBuzzer() { DDRD |= (1 << PD3); }//buzzer hangt op PD3
 
 void buzzerOff() {
@@ -56,17 +53,26 @@ void youWin() {
   _delay_ms(300);
 }
 
+void SOS() {
+  playTone(C5, 50);
+  _delay_ms(50);
+  playTone(C5, 50);
+  _delay_ms(50);
+  playTone(C5, 50);
+  _delay_ms(50);
 
-/*
-void oplopend(bool condition) {
-  while (condition) {
-    for (int note = 0; note < 8; note++) {
-      playTone(frequencies[note], DURATION);
-      printf("Period: %lu\n", frequencies[note]);
-      lightUpLed(0);
-      _delay_ms(DURATION);
-      lightDownLed(0);
-    }
-  }
+  _delay_ms(100);
+  playTone(C5, 200);
+  _delay_ms(100);
+  playTone(C5, 200);
+  _delay_ms(100);
+  playTone(C5, 200);
+  _delay_ms(200);
+
+  playTone(C5, 50);
+  _delay_ms(50);
+  playTone(C5, 50);
+  _delay_ms(50);
+  playTone(C5, 50);
+  _delay_ms(50);
 }
-*/

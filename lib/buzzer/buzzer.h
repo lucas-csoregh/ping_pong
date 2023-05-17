@@ -13,3 +13,4 @@ uint32_t frequencies[] = {C5, D5, E5, F5, G5, A5, B5, C6};  // do-re-mi...
 void enableBuzzer();
 void playTone(float frequency, uint32_t duration);
 void youWin();
+void SOS();

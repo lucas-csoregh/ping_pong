@@ -13,6 +13,7 @@
 
 #include <buzzer.h>
 #include <led.h>
+#include <stdlib.h>
 
 #define P1 "P1"
 #define P2 "P2"
@@ -77,7 +78,11 @@ void winnerScreen(int whoWon) {
   printf("--------------\n");
   printf("Score: %d\n", score[index]);
 
-  youWin();
+  if(whoWon == 1) {
+    youWin();
+  } else {
+    SOS();
+  }
 
   end();
 
