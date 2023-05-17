@@ -41,11 +41,7 @@ int leftBorder = sizeof(field) -4;
 void readVelocity() {
   int analog = analogToDigital();
     velocity = analog;
-  /*
-  if(analog % 2 == 0 && analog != 0) {
-    velocity = analog;
-  }*/
-  //return velocity;
+
 }
 
 ISR(TIMER1_COMPA_vect) {
@@ -151,7 +147,7 @@ void introMuziekske() {
       }
       //changeVelocity(analogToDigital());
       readVelocity();
-      writeNumberAndWait(velocity, 20);
+      writeNumberAndWait(&velocity, 20);
       playTone(frequencies[note], DURATION);
       _delay_ms(DURATION);
     }
@@ -170,23 +166,16 @@ void initGameReq() {
   introMuziekske();
 }
 
-/*
-void changeVelocity(int vel) {
-  if(vel > 1) {
-    velocity = vel;
-  }
-}*/
 
 void sendBall() {
   if(ballIndex == 0 && (whoHitLast ==1 || whoHitLast==2)) {
-    if(whoHitLast==1) { // start w moving away from the LEFT border if ballIndex hasn't been set yet
+    if(whoHitLast==1) {
       field[rightBorder] = ball;
       ballIndex = rightBorder;
-    } else if(whoHitLast==2) { // start w moving away from the LEFT border if ballIndex hasn't been set yet
+    } else if(whoHitLast==2) {
       field[leftBorder] = ball;
       ballIndex = leftBorder;
     }
-    //printf(field);
     printf("vel:%d %s", velocity, field);
   }
 
@@ -203,22 +192,12 @@ void sendBall() {
     field[lastIndex] = line;
 
     while(gamePaused || !(millis() % velocity == 0)) {
-      //printf("velocity == 0: \n", velocity == 0);
-      /*
-      if(velocity == 0) {
-        break;
-      }*/
-      // wait
-      //changeVelocity(analogToDigital());
       readVelocity();
-      //velocity = analogToDigital();
-      writeNumberAndWait(velocity, 20);
+      writeNumberAndWait(&velocity, 20);
     }
-    //printf("%ld | %d @ %s",millis() , velocity, field);
     printf("vel:%d %s", velocity, field);
 
     if(ballIndex == leftBorder || ballIndex == rightBorder) {
-      // TODO: add overwinningsgeluid here
       if(ballIndex == leftBorder) {
         winnerScreen(1);
       } else if(ballIndex == rightBorder) {
@@ -235,10 +214,8 @@ void sendBall() {
 
 void gameLoop() {
   int old = velocity;
-  //velocity = analogToDigital();
-  //changeVelocity(analogToDigital());
   readVelocity();
-  writeNumberAndWait(velocity, 20);
+  writeNumberAndWait(&velocity, 20);
   if(!initGame) {
     if(old != velocity) {
       printf("velocity: %d\n", velocity);

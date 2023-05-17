@@ -79,16 +79,16 @@ void writeNumber(int number) {
 
 //Schrijft getal tussen 0 en 9999 naar de display en zorgt dat het er een bepaald aantal milliseconden blijft staan.
 //Opgelet: de timing is "ongeveer", er wordt geen rekening gehouden met de tijd writeNumberToSegment in beslag neemt...
-void writeNumberAndWait(int number, int delay) {
-  if (number < 0 || number > 9999) return;
+void writeNumberAndWait(int *number, int delay) {
+  if (*number < 0 || *number > 9999) return;
   for (int i = 0; i < delay / 20; i++) {
-    writeNumberToSegment(0, number / 1000);
+    writeNumberToSegment(0, *number / 1000);
     _delay_ms(5);
-    writeNumberToSegment(1, (number / 100) % 10);
+    writeNumberToSegment(1, (*number / 100) % 10);
     _delay_ms(5);
-    writeNumberToSegment(2, (number / 10) % 10);
+    writeNumberToSegment(2, (*number / 10) % 10);
     _delay_ms(5);
-    writeNumberToSegment(3, number % 10);
+    writeNumberToSegment(3, *number % 10);
     _delay_ms(5);
   }
 }
