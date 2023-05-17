@@ -24,6 +24,8 @@ bool gamePaused = false;
 bool introOver = false;
 char field[] = "[--------------------------------------------------]\n";
 
+int inDeBuurt = 5;
+
 char line = '-';
 char ball = 'O';
 int ballIndex = 0; // where in the char field[] is the ball rn
@@ -36,6 +38,7 @@ int score[2];
 int rightBorder = 1;
 int leftBorder = sizeof(field) -4;
 
+unsigned long lastTime = 0;
 
 
 typedef struct Turn {
@@ -62,8 +65,18 @@ void readVelocity() {
     velocity = analog;
 }
 
-ISR(TIMER1_COMPA_vect) {
-  millisCount++;
+void end() {
+  printf("\n");
+  for (int i = 0; i < numTurns; i++) {
+    printf("Turn %d: %s hit the ball at velocity: '%d' and ballindex: '%d'\n", i+1, turns[i].player, turns[i].velocity, turns[i].ballIndex);
+  }
+  printf("\n");
+  if (turns != NULL) { // free up the manually allocated memory block after using it to store the turns
+    printf("freeing manually allocated memory...\n");
+    free(turns);
+    turns = NULL; // Optional: set the pointer to NULL to avoid dangling pointer issues
+  }
+  printf("FIN\n");
 }
 
 void winnerScreen(int whoWon) {
@@ -76,13 +89,13 @@ void winnerScreen(int whoWon) {
     printf("Player %d score: %d\n", i+1, score[i]);
   }
 
-  if(whoWon == 1) {
+  if(score[0] == 0 && score[1] == 0) {
+    SOS();
+  } else if(whoWon == 1) {
     youWin(1);
   } else if(whoWon == 2) {
     youWin(2);
-  } else if(score[0] == 0 && score[1] == 0) {
-    SOS();
-  }
+  } 
 
   end();
 
@@ -150,6 +163,7 @@ ISR(PCINT1_vect) {
     }
   }
 }
+
 void introMuziekske() {
   printf("Press button 1 or 3 to start the game,\npress button 2 during game to pause the game.\n\n");
   enableBuzzer();
@@ -199,8 +213,8 @@ void sendBall() {
     field[lastIndex] = line;
 
     while(gamePaused || !(millis() % velocity == 0)) {
-      readVelocity();
-      writeNumberAndWait(&velocity, 20);
+        readVelocity();
+        writeNumberAndWait(&velocity, 20);
     }
     printf("vel:%d %s", velocity, field);
 
@@ -218,17 +232,3 @@ void sendBall() {
   }
 }
 
-
-void end() {
-  printf("\n");
-  for (int i = 0; i < numTurns; i++) {
-    printf("Turn %d: %s hit the ball at velocity: '%d' and ballindex: '%d'\n", i+1, turns[i].player, turns[i].velocity, turns[i].ballIndex);
-  }
-  printf("\n");
-  if (turns != NULL) { // free up the manually allocated memory block after using it to store the turns
-    printf("freeing manually allocated memory...\n");
-    free(turns);
-    turns = NULL; // Optional: set the pointer to NULL to avoid dangling pointer issues
-  }
-  printf("FIN\n");
-}

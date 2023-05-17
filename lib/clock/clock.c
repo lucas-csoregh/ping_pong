@@ -20,3 +20,7 @@ unsigned long millis() {
   
   return count;
 }
+
+ISR(TIMER1_COMPA_vect) {
+  millisCount++;
+}
