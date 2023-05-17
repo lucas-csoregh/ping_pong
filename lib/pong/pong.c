@@ -67,8 +67,13 @@ void readVelocity() {
 
 void end() {
   printf("\n\nSpelverloop:\n");
+  printf("------------\n");
   for (int i = 0; i < numTurns; i++) {
-    printf("Turn %d: %s hit the ball at velocity: '%d' and ballindex: '%d'\n", i+1, turns[i].player, turns[i].velocity, turns[i].ballIndex);
+    if(i == 0) {
+        printf("Turn %d: %s served the ball at velocity: '%d' and ballindex: '%d'\n", i+1, turns[i].player, turns[i].velocity, turns[i].ballIndex);
+    } else {
+        printf("Turn %d: %s hit the ball back at velocity: '%d' and ballindex: '%d'\n", i+1, turns[i].player, turns[i].velocity, turns[i].ballIndex);
+    }
   }
   printf("\n");
   if (turns != NULL) { // free up the manually allocated memory block after using it to store the turns
