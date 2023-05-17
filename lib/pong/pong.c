@@ -1,15 +1,14 @@
 #include <avr/interrupt.h>
-#include <avr/io.h>
 #include <wpsh209.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <util/delay.h>
-#include <util/atomic.h>
 
 #include <pong.h>
 #include <buzzer.h>
+#include <clock.h>
 
 #define P1 "Player 1"
 #define P2 "Player 2"
@@ -33,7 +32,6 @@ int whoHitLast =0;
 
 int score[2];
 
-volatile unsigned long millisCount = 0;
 
 int rightBorder = 1;
 int leftBorder = sizeof(field) -4;
@@ -98,16 +96,6 @@ void winnerScreen(int whoWon) {
 
 }
 
-unsigned long millis() {
-  unsigned long count;
-  
-  // Disable interrupts temporarily
-  ATOMIC_BLOCK(ATOMIC_FORCEON) {
-    count = millisCount;
-  }
-  
-  return count;
-}
 
 
 void startGame(int who){
@@ -162,14 +150,6 @@ ISR(PCINT1_vect) {
     }
   }
 }
-
-void initTimer1() {
-  TCCR1B |= (1 << WGM12);            // CTC mode
-  OCR1A = F_CPU / 8000 - 1;
-  TIMSK1 |= (1 << OCIE1A);           // Enable Timer1 compare match interrupt
-  TCCR1B |= (1 << CS11);
-}
-
 void introMuziekske() {
   printf("Press button 1 or 3 to start the game,\npress button 2 during game to pause the game.\n\n");
   enableBuzzer();
