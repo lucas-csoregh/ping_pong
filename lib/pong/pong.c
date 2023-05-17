@@ -66,17 +66,17 @@ void readVelocity() {
 }
 
 void end() {
-  printf("\n");
+  printf("\n\nSpelverloop:\n");
   for (int i = 0; i < numTurns; i++) {
     printf("Turn %d: %s hit the ball at velocity: '%d' and ballindex: '%d'\n", i+1, turns[i].player, turns[i].velocity, turns[i].ballIndex);
   }
   printf("\n");
   if (turns != NULL) { // free up the manually allocated memory block after using it to store the turns
-    printf("freeing manually allocated memory...\n");
+    //printf("freeing manually allocated memory...\n");
     free(turns);
     turns = NULL; // Optional: set the pointer to NULL to avoid dangling pointer issues
   }
-  printf("FIN\n");
+  //printf("FIN\n");
 }
 
 void winnerScreen(int whoWon) {
