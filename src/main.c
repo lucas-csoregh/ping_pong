@@ -16,6 +16,8 @@
 
 #define PLAYER 15
 
+// FIXME: Find out why you cannot go back up once you go to velocity 1 or 0
+
 int velocity = 0; // always shown on the segmented led display
 
 bool initGame = false; // intros roll
@@ -54,7 +56,7 @@ void winnerScreen(int whoWon) {
   int index = whoWon -1;
 
   printf("\n\nPlayer %d WON!!\n", whoWon);
-  printf("---------------\n", whoWon);
+  printf("--------------\n", whoWon);
   printf("Score: %d\n", score[index]);
 
   youWin();
