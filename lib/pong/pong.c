@@ -15,7 +15,7 @@
 #define PLAYER 15
 
 
-int velocity = 0; // always shown on the segmented led display
+int velocity = 0;
 
 bool initGame = false; // intros roll
 bool gameRunning = false; // the actual game part of the program really starts here
