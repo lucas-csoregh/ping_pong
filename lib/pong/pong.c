@@ -72,7 +72,7 @@ void end() {
   printf("------------\n");
   for (int i = 0; i < numTurns; i++) {
     if(i == 0) {
-        printf("START: %s served the ball at velocity: '%d' and ballindex: '%d'\n\n", turns[i].player, turns[i].velocity, turns[i].ballIndex);
+        printf("START: %s served the ball at velocity: '%d'\n\n", turns[i].player, turns[i].velocity);
     } else {
         printf("Turn %d: %s hit the ball back at velocity: '%d' and ballindex: '%d'\n", i, turns[i].player, turns[i].velocity, turns[i].ballIndex);
     }
@@ -134,6 +134,84 @@ void startGame(int who){
 }
 
 
+
+
+void introMuziekske() {
+  printf("Press button 1 or 3 to start the game,\npress button 2 during game to pause the game.\n\n");
+  enableBuzzer();
+  while(!initGame) {
+    for (int note = 0; note < 8; note++) {
+      introOver = true;
+      if(initGame) {
+        break;
+      }
+      //changeVelocity(analogToDigital());
+      readVelocity();
+      writeNumberAndWait(&velocity, 20);
+      playTone(frequencies[note], DURATION);
+      _delay_ms(DURATION);
+    }
+  }
+}
+
+void serveBall() {
+  if(whoHitLast ==1 || whoHitLast==2) {
+    if(whoHitLast==1) {
+      field[rightBorder] = ball;
+      ballIndex = rightBorder;
+
+      newTurn(P1, velocity, ballIndex);
+    } else if(whoHitLast==2) {
+      field[leftBorder] = ball;
+      ballIndex = leftBorder;
+
+      newTurn(P2, velocity, ballIndex);
+    }
+    printf("vel:%d %s", velocity, field);
+  }
+}
+
+void hitBall() {
+  while( !gameOver && (whoHitLast == 1 && ballIndex != leftBorder) || (whoHitLast == 2 && ballIndex != rightBorder)) {
+    int lastIndex = ballIndex;
+
+    if(whoHitLast == 1) {
+      ballIndex++;
+    } else {
+      ballIndex--;
+    }
+
+    field[ballIndex] = ball;
+    field[lastIndex] = line;
+
+    while(gamePaused || !(millis() % velocity == 0)) {
+        readVelocity();
+        writeNumberAndWait(&velocity, 20);
+    }
+    printf("vel:%d %s", velocity, field);
+
+    if(ballIndex == leftBorder || ballIndex == rightBorder) {
+      if(ballIndex == leftBorder) {
+        winnerScreen(1);
+      } else if(ballIndex == rightBorder) {
+        winnerScreen(2);
+      }
+
+      gameOver = true;
+      break;
+    }
+  }
+}
+
+void sendBall() {
+  readVelocity();
+  if(ballIndex == 0) {
+    serveBall();
+  } else {
+    hitBall();
+  }
+}
+
 void button1() {
   if ((PINC & (1 << PC1)) == 0) {
     if(!gameRunning) {
@@ -183,72 +261,3 @@ ISR(PCINT1_vect) {
     button3();
   }
 }
-
-void introMuziekske() {
-  printf("Press button 1 or 3 to start the game,\npress button 2 during game to pause the game.\n\n");
-  enableBuzzer();
-  while(!initGame) {
-    for (int note = 0; note < 8; note++) {
-      introOver = true;
-      if(initGame) {
-        break;
-      }
-      //changeVelocity(analogToDigital());
-      readVelocity();
-      writeNumberAndWait(&velocity, 20);
-      playTone(frequencies[note], DURATION);
-      _delay_ms(DURATION);
-    }
-  }
-}
-
-void sendBall() {
-  readVelocity();
-  if(ballIndex == 0 && (whoHitLast ==1 || whoHitLast==2)) {
-    if(whoHitLast==1) {
-      field[rightBorder] = ball;
-      ballIndex = rightBorder;
-
-      newTurn(P1, velocity, ballIndex);
-    } else if(whoHitLast==2) {
-      field[leftBorder] = ball;
-      ballIndex = leftBorder;
-
-      newTurn(P2, velocity, ballIndex);
-    }
-    printf("vel:%d %s", velocity, field);
-  }
-
-
-  while( !gameOver && (whoHitLast == 1 && ballIndex != leftBorder) || (whoHitLast == 2 && ballIndex != rightBorder)) {
-    int lastIndex = ballIndex;
-
-    if(whoHitLast == 1) {
-      ballIndex++;
-    } else {
-      ballIndex--;
-    }
-
-    field[ballIndex] = ball;
-    field[lastIndex] = line;
-
-    while(gamePaused || !(millis() % velocity == 0)) {
-        readVelocity();
-        writeNumberAndWait(&velocity, 20);
-    }
-    printf("vel:%d %s", velocity, field);
-
-    if(ballIndex == leftBorder || ballIndex == rightBorder) {
-      if(ballIndex == leftBorder) {
-        winnerScreen(1);
-      } else if(ballIndex == rightBorder) {
-        winnerScreen(2);
-      }
-
-
-      gameOver = true;
-      break;
-    }
-  }
-}
-
