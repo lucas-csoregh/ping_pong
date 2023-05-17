@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <util/delay.h>
+#include <display.h>
 
 #include <pong.h>
 #include <buzzer.h>
@@ -116,25 +117,13 @@ void winnerScreen(int whoWon) {
 
 }
 
-
-
 void startGame(int who){
   if(!initGame) {
-    if(who == 1) {
-      printf("Player 1 (left)\n");
-    } else if(who == 2) {
-      printf("Player 2 (right)\n");
-    }
     whoHitLast = who;
-
     initGame=true;
-
     gameRunning = true;
   }
 }
-
-
-
 
 void introMuziekske() {
   printf("Press button 1 or 3 to start the game,\npress button 2 during game to pause the game.\n\n");
