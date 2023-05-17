@@ -53,6 +53,15 @@ void youWin() {
   _delay_ms(300);
 }
 
+void player1Hit() {
+  playTone(E5,10);
+  _delay_ms(10);
+}
+void player2Hit() {
+  playTone(C5,10);
+  _delay_ms(10);
+}
+
 void SOS() {
   playTone(C5, 50);
   _delay_ms(50);

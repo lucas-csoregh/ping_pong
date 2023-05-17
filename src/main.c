@@ -140,6 +140,7 @@ ISR(PCINT1_vect) {
         //whoHitLast = 1;
         startGame(1); // btn 1 pressed, start game as player 1
       } else if(ballIndex < rightBorder + 5) {
+        player1Hit();
         whoHitLast = 1;
         score[0]++;
         newTurn(P1, velocity, ballIndex);
@@ -158,6 +159,7 @@ ISR(PCINT1_vect) {
         //whoHitLast = 2;
         startGame(2); // btn 3 pressed, start game as player 2
       } else if(ballIndex > leftBorder - 5){
+        player2Hit();
         whoHitLast = 2;
         score[1]++;
         newTurn(P2, velocity, ballIndex);

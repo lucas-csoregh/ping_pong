@@ -14,3 +14,5 @@ void enableBuzzer();
 void playTone(float frequency, uint32_t duration);
 void youWin();
 void SOS();
+void player1Hit();
+void player2Hit();
