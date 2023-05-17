@@ -1,4 +1,7 @@
 #include <avr/io.h>
+#include <util/delay.h>
+
+#define DELAY 150
 
 void enableLed(int lednumber) {
   switch (lednumber) {
@@ -79,29 +82,29 @@ void lightsCountDown() {
   // Blink 4 lights 
   for(int i=0; i<3; i++) {
     lightUpAllLeds();
-    _delay_ms(250);
+    _delay_ms(DELAY);
     lightDownAllLeds();
-    _delay_ms(250);
+    _delay_ms(DELAY);
   }
   // Blink 3 lights (+speed)
   for(int i=0; i<3; i++) {
     lightUpLeds(0b011100);
-    _delay_ms(250);
+    _delay_ms(DELAY);
     lightDownLeds(0b011100);
-    _delay_ms(250);
+    _delay_ms(DELAY);
   }
   // Blink 2 lights (+speed)
   for(int i=0; i<3; i++) {
     lightUpLeds(0b001100);
-    _delay_ms(250);
+    _delay_ms(DELAY);
     lightDownLeds(0b001100);
-    _delay_ms(250);
+    _delay_ms(DELAY);
   }
   // Blink 1 lights (+speed)
   for(int i=0; i<3; i++) {
     lightUpLeds(0b000100);
-    _delay_ms(250);
+    _delay_ms(DELAY);
     lightDownLeds(0b000100);
-    _delay_ms(250);
+    _delay_ms(DELAY);
   }
 }
