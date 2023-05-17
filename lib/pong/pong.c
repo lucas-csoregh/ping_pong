@@ -70,9 +70,9 @@ void end() {
   printf("------------\n");
   for (int i = 0; i < numTurns; i++) {
     if(i == 0) {
-        printf("Turn %d: %s served the ball at velocity: '%d' and ballindex: '%d'\n", i+1, turns[i].player, turns[i].velocity, turns[i].ballIndex);
+        printf("START: %s served the ball at velocity: '%d' and ballindex: '%d'\n\n", turns[i].player, turns[i].velocity, turns[i].ballIndex);
     } else {
-        printf("Turn %d: %s hit the ball back at velocity: '%d' and ballindex: '%d'\n", i+1, turns[i].player, turns[i].velocity, turns[i].ballIndex);
+        printf("Turn %d: %s hit the ball back at velocity: '%d' and ballindex: '%d'\n", i, turns[i].player, turns[i].velocity, turns[i].ballIndex);
     }
   }
   printf("\n");
@@ -131,41 +131,54 @@ void startGame(int who){
   }
 }
 
+
+void button1() {
+  if ((PINC & (1 << PC1)) == 0) {
+    if(!gameRunning) {
+      //whoHitLast = 1;
+      startGame(1); // btn 1 pressed, start game as player 1
+    } else if(ballIndex < rightBorder + 5) {
+      player1Hit();
+      whoHitLast = 1;
+      score[0]++;
+      newTurn(P1, velocity, ballIndex);
+    }
+  } 
+}
+
+void button2() {
+  if ((PINC & (1 << PC2)) == 0) {
+    //gameOver = true; // btn 2 pressed, game over
+    if(gamePaused) {
+      gamePaused = false;
+    } else {
+      gamePaused = true;
+    }
+  } 
+}
+
+void button3() {
+  if ((PINC & (1 << PC3)) == 0) {
+    if(!gameRunning) {
+      //whoHitLast = 2;
+      startGame(2); // btn 3 pressed, start game as player 2
+    } else if(ballIndex > leftBorder - 5){
+      player2Hit();
+      whoHitLast = 2;
+      score[1]++;
+      newTurn(P2, velocity, ballIndex);
+    }
+  }
+}
+
 ISR(PCINT1_vect) {
   // FIXED: when these three if statements were in an if-elseif-else chain, player1 could sabotage player 3 by holding in their button
   // but when the conditional chain is split like this, they cannot sabotage eachother by holding their button 
 
   if(introOver) {
-    if ((PINC & (1 << PC1)) == 0) {
-      if(!gameRunning) {
-        //whoHitLast = 1;
-        startGame(1); // btn 1 pressed, start game as player 1
-      } else if(ballIndex < rightBorder + 5) {
-        player1Hit();
-        whoHitLast = 1;
-        score[0]++;
-        newTurn(P1, velocity, ballIndex);
-      }
-    } 
-    if ((PINC & (1 << PC2)) == 0) {
-      //gameOver = true; // btn 2 pressed, game over
-      if(gamePaused) {
-        gamePaused = false;
-      } else {
-        gamePaused = true;
-      }
-    } 
-    if ((PINC & (1 << PC3)) == 0) {
-      if(!gameRunning) {
-        //whoHitLast = 2;
-        startGame(2); // btn 3 pressed, start game as player 2
-      } else if(ballIndex > leftBorder - 5){
-        player2Hit();
-        whoHitLast = 2;
-        score[1]++;
-        newTurn(P2, velocity, ballIndex);
-      }
-    }
+    button1();
+    button2();
+    button3();
   }
 }
 
