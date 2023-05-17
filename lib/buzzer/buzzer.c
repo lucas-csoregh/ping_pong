@@ -3,7 +3,9 @@
 //#include <led.h>
 #include <usart.h>
 #include <util/delay.h>
-#include <wpsh209.h>
+//#include <wpsh209.h>
+#include <buttons.h>
+#include <adc.h>
 #include <stdbool.h>
 
 //DURATION IS IN MILLISECONDEN

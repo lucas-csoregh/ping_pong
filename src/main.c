@@ -4,7 +4,9 @@
 #include <pong.h>
 
 #include <avr/interrupt.h>
-#include <wpsh209.h>
+//#include <wpsh209.h>
+#include <buttons.h>
+#include <adc.h>
 
 void initGameReq() {
   initUSART();

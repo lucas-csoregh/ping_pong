@@ -1,5 +1,7 @@
 #include <avr/interrupt.h>
-#include <wpsh209.h>
+//#include <wpsh209.h>
+#include <buttons.h>
+#include <adc.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
